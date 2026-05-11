@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08db307493728f349ab82bc919ee218b, type: 3}
+  m_Name: 03_Caja
+  m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
+  id: caja
+  nombre: Cajas
+  subtitulo: Productos de impulso
+  icono: {fileID: 0}
+  colorPrincipal: {r: 0.498, g: 0.467, b: 0.867, a: 1}
+  camaraVirtualId: caja
+  contexto: "En las cajas tienes 24 productos de impulso: chocolatinas, chicles,
+    pilas, revistas. Solo 8 de cada 10 veces el cliente los encuentra disponibles,
+    porque s\xF3lo se reponen al cambio de turno. Estos productos son los que m\xE1s
+    margen dejan."
+  pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
+  opciones:
+  - letra: 65
+    titulo: Poner una persona dedicada a reponer las cajas cada 2 horas
+    esAcertada: 0
+    deltaOsaPct: 4
+    deltaInvDescriptivo: "\u22122u"
+    deltaInvDir: 1
+    deltaSosPct: 1
+    labelEstadoZona: REPONEDOR EN TURNO
+    animacionMercaderista: Reponer
+    porque: Ganas mucho en impulso, pero el sueldo del reponedor se come parte de
+      la utilidad y el proveedor queda fuera de la jugada.
+    nivelColaboracion: 1
+  - letra: 66
+    titulo: "Que la marca l\xEDder gestione y reponga toda la zona de cajas"
+    esAcertada: 0
+    deltaOsaPct: 5
+    deltaInvDescriptivo: "\u22123u"
+    deltaInvDir: 1
+    deltaSosPct: -2
+    labelEstadoZona: ZONA DELEGADA
+    animacionMercaderista: Delegar
+    porque: "Vendes m\xE1s sin operar la zona, pero cediste el control de tu espacio
+      m\xE1s rentable. Es delegaci\xF3n, no colaboraci\xF3n."
+    nivelColaboracion: 2
+  - letra: 67
+    titulo: "Comit\xE9 conjunto cadena-proveedor con datos en tiempo real"
+    esAcertada: 1
+    deltaOsaPct: 6
+    deltaInvDescriptivo: "\u22123u"
+    deltaInvDir: 1
+    deltaSosPct: 3
+    labelEstadoZona: "COMIT\xC9 ACTIVO"
+    animacionMercaderista: Colaborar
+    porque: "Mantienes el control de la zona y sum\xE1s la inteligencia del proveedor.
+      Ambos ven los datos y deciden juntos: mejor margen y aprendizaje compartido."
+    nivelColaboracion: 4

@@ -21,14 +21,25 @@ namespace LOGYCA.OSA.EditorTools
         public static void Generar()
         {
             EnsureDir(CarpetaDestino);
+            LimpiarAssetsViejos();   // borra cualquier .asset previo (incl. 03_Panaderia si existe)
             CrearFruteria();
             CrearCarnes();
-            CrearPanaderia();
+            CrearCaja();
             CrearAbarrotes();
             CrearBodega();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[LOGYCA] 5 estaciones generadas en " + CarpetaDestino);
+        }
+
+        private static void LimpiarAssetsViejos()
+        {
+            if (!Directory.Exists(CarpetaDestino)) return;
+            foreach (var path in Directory.GetFiles(CarpetaDestino, "*.asset"))
+            {
+                var rel = path.Replace('\\', '/');
+                AssetDatabase.DeleteAsset(rel);
+            }
         }
 
         // -------- 1. FRUTERÍA (la del slide 8 / 9) --------
@@ -90,33 +101,33 @@ namespace LOGYCA.OSA.EditorTools
             Save(e, "02_Carnes");
         }
 
-        // -------- 3. PANADERÍA --------
-        private static void CrearPanaderia()
+        // -------- 3. CAJA REGISTRADORA --------
+        private static void CrearCaja()
         {
             var e = ScriptableObject.CreateInstance<EstacionData>();
-            e.id = "panaderia";
-            e.nombre = "Panadería";
-            e.subtitulo = "Demanda por hora";
-            e.colorPrincipal = new Color(0.729f, 0.459f, 0.090f);
-            e.camaraVirtualId = "panaderia";
-            e.contexto = "El pan campesino se hornea 2 veces al día. Entre 5 y 7 p.m. casi siempre se acaba. Pero al final del día sobra el 15% del pan.";
+            e.id = "caja";
+            e.nombre = "Cajas";
+            e.subtitulo = "Productos de impulso";
+            e.colorPrincipal = new Color(0.498f, 0.467f, 0.867f);
+            e.camaraVirtualId = "caja";
+            e.contexto = "En las cajas tienes 24 productos de impulso: chocolatinas, chicles, pilas, revistas. Solo 8 de cada 10 veces el cliente los encuentra disponibles, porque sólo se reponen al cambio de turno. Estos productos son los que más margen dejan.";
 
-            e.opciones.Add(Op('A', "Agregar una tercera horneada a las 5 p.m.",
-                acertada: false, deltaOsa: +3, deltaSos: +2, invDir: DeltaDir.Igual, invDesc: "→ 0",
-                labelZona: "HORNO EN MARCHA", animMerc: "Hornear", nivelCol: 1,
-                porque: "Vendes más en la tarde pero el panadero extra y la luz se llevan buena parte de la ganancia."));
+            e.opciones.Add(Op('A', "Poner una persona dedicada a reponer las cajas cada 2 horas",
+                acertada: false, deltaOsa: +4, deltaSos: +1, invDir: DeltaDir.Baja, invDesc: "−2u",
+                labelZona: "REPONEDOR EN TURNO", animMerc: "Reponer", nivelCol: 1,
+                porque: "Ganas mucho en impulso, pero el sueldo del reponedor se come parte de la utilidad y el proveedor queda fuera de la jugada."));
 
-            e.opciones.Add(Op('B', "Hornear con datos por hora",
-                acertada: false, deltaOsa: +2, deltaSos: 0, invDir: DeltaDir.Baja, invDesc: "−1u",
-                labelZona: "PRONÓSTICO ACTIVO", animMerc: "Datos", nivelCol: 1,
-                porque: "Vendes más y botas menos pan, pero la oportunidad colaborativa con el molino queda sobre la mesa."));
+            e.opciones.Add(Op('B', "Que la marca líder gestione y reponga toda la zona de cajas",
+                acertada: false, deltaOsa: +5, deltaSos: -2, invDir: DeltaDir.Baja, invDesc: "−3u",
+                labelZona: "ZONA DELEGADA", animMerc: "Delegar", nivelCol: 2,
+                porque: "Vendes más sin operar la zona, pero cediste el control de tu espacio más rentable. Es delegación, no colaboración."));
 
-            e.opciones.Add(Op('C', "Planear juntos con el molino",
-                acertada: true, deltaOsa: +5, deltaSos: +3, invDir: DeltaDir.Baja, invDesc: "−2u",
-                labelZona: "MOLINO SINCRONIZADO", animMerc: "Colaborar", nivelCol: 4,
-                porque: "Botas casi nada, vendes más y capturas todas las franjas. La harina deja de ser un commodity para ser un pacto."));
+            e.opciones.Add(Op('C', "Comité conjunto cadena-proveedor con datos en tiempo real",
+                acertada: true, deltaOsa: +6, deltaSos: +3, invDir: DeltaDir.Baja, invDesc: "−3u",
+                labelZona: "COMITÉ ACTIVO", animMerc: "Colaborar", nivelCol: 4,
+                porque: "Mantienes el control de la zona y sumás la inteligencia del proveedor. Ambos ven los datos y deciden juntos: mejor margen y aprendizaje compartido."));
 
-            Save(e, "03_Panaderia");
+            Save(e, "03_Caja");
         }
 
         // -------- 4. ABARROTES --------
