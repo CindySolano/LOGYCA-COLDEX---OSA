@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08db307493728f349ab82bc919ee218b, type: 3}
+  m_Name: 05_Bodega
+  m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
+  id: bodega
+  nombre: Bodega
+  subtitulo: "Reposici\xF3n"
+  icono: {fileID: 0}
+  colorPrincipal: {r: 0.216, g: 0.541, b: 0.867, a: 1}
+  camaraVirtualId: bodega
+  contexto: "En el 7% de las veces que un cliente no encuentra un producto, ese producto
+    s\xED est\xE1 en bodega. El equipo repone en horarios fijos."
+  pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
+  opciones:
+  - letra: 65
+    titulo: "Reposici\xF3n por alerta cada hora"
+    esAcertada: 0
+    deltaOsaPct: 5
+    deltaInvDescriptivo: "\u2192 0"
+    deltaInvDir: 2
+    deltaSosPct: 1
+    labelEstadoZona: "REPOSICI\xD3N REACTIVA"
+    animacionMercaderista: Reponer
+    porque: "Plata dormida que ahora se vende. Pero el proveedor se beneficia sin
+      enterarse \u2014 la oportunidad colaborativa queda intacta."
+    nivelColaboracion: 1
+  - letra: 66
+    titulo: Reorganizar la bodega
+    esAcertada: 0
+    deltaOsaPct: 3
+    deltaInvDescriptivo: "\u22121u"
+    deltaInvDir: 1
+    deltaSosPct: 0
+    labelEstadoZona: BODEGA ORDENADA
+    animacionMercaderista: Organizar
+    porque: "Mejora r\xE1pida y barata, pero el problema de fondo (los horarios fijos
+      de reposici\xF3n) sigue ah\xED."
+    nivelColaboracion: 1
+  - letra: 67
+    titulo: "Sincronizar bodega y producci\xF3n del proveedor"
+    esAcertada: 1
+    deltaOsaPct: 6
+    deltaInvDescriptivo: "\u22124u"
+    deltaInvDir: 1
+    deltaSosPct: 2
+    labelEstadoZona: BODEGA SINCRONIZADA
+    animacionMercaderista: Colaborar
+    porque: "Libera capital congelado y los dos jugando como un equipo capturan la
+      rentabilidad combinada m\xE1s alta."
+    nivelColaboracion: 4

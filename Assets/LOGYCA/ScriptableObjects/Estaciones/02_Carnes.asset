@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08db307493728f349ab82bc919ee218b, type: 3}
+  m_Name: 02_Carnes
+  m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
+  id: carnes
+  nombre: "Carnes y l\xE1cteos"
+  subtitulo: "Cadena de fr\xEDo"
+  icono: {fileID: 0}
+  colorPrincipal: {r: 0.768, g: 0.282, b: 0.282, a: 1}
+  camaraVirtualId: carnes
+  contexto: "Esta semana se da\xF1\xF3 el 9% de las carnes empacadas. Y al mismo
+    tiempo se acab\xF3 la leche entera 3 d\xEDas seguidos. El proveedor entrega 2
+    veces por semana."
+  pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
+  opciones:
+  - letra: 65
+    titulo: Pedirle al proveedor que entregue 3 veces por semana
+    esAcertada: 0
+    deltaOsaPct: 4
+    deltaInvDescriptivo: "\u22122u"
+    deltaInvDir: 1
+    deltaSosPct: 1
+    labelEstadoZona: "FR\xCDO REFORZADO \xB7 COSTO ALTO"
+    animacionMercaderista: Reorden
+    porque: "Vendiste un poco m\xE1s por menos quiebres, pero el cami\xF3n extra
+      se comi\xF3 casi toda la ganancia."
+    nivelColaboracion: 2
+  - letra: 66
+    titulo: "Trabajar en equipo con el proveedor: comparten datos y producci\xF3n"
+    esAcertada: 1
+    deltaOsaPct: 6
+    deltaInvDescriptivo: "\u22123u"
+    deltaInvDir: 1
+    deltaSosPct: 3
+    labelEstadoZona: "FR\xCDO COLABORATIVO"
+    animacionMercaderista: Colaborar
+    porque: "Vendiste m\xE1s, gastaste menos en log\xEDstica y casi no se da\xF1\xF3
+      producto. La gesti\xF3n conjunta paga la inversi\xF3n."
+    nivelColaboracion: 4
+  - letra: 67
+    titulo: "Seguir igual y rebajar las carnes pr\xF3ximas a vencerse"
+    esAcertada: 0
+    deltaOsaPct: -2
+    deltaInvDescriptivo: "\u2192 0"
+    deltaInvDir: 2
+    deltaSosPct: -1
+    labelEstadoZona: "FR\xCDO EN LIQUIDACI\xD3N"
+    animacionMercaderista: Rebajar
+    porque: "Tapaste el hueco de hoy, pero rebajar precios te baj\xF3 la ganancia
+      y la pr\xF3xima semana vuelve a pasar."
+    nivelColaboracion: 1

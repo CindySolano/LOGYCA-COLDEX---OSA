@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08db307493728f349ab82bc919ee218b, type: 3}
+  m_Name: 03_Panaderia
+  m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
+  id: panaderia
+  nombre: "Panader\xEDa"
+  subtitulo: Demanda por hora
+  icono: {fileID: 0}
+  colorPrincipal: {r: 0.729, g: 0.459, b: 0.09, a: 1}
+  camaraVirtualId: panaderia
+  contexto: "El pan campesino se hornea 2 veces al d\xEDa. Entre 5 y 7 p.m. casi
+    siempre se acaba. Pero al final del d\xEDa sobra el 15% del pan."
+  pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
+  opciones:
+  - letra: 65
+    titulo: Agregar una tercera horneada a las 5 p.m.
+    esAcertada: 0
+    deltaOsaPct: 3
+    deltaInvDescriptivo: "\u2192 0"
+    deltaInvDir: 2
+    deltaSosPct: 2
+    labelEstadoZona: HORNO EN MARCHA
+    animacionMercaderista: Hornear
+    porque: "Vendes m\xE1s en la tarde pero el panadero extra y la luz se llevan
+      buena parte de la ganancia."
+    nivelColaboracion: 1
+  - letra: 66
+    titulo: Hornear con datos por hora
+    esAcertada: 0
+    deltaOsaPct: 2
+    deltaInvDescriptivo: "\u22121u"
+    deltaInvDir: 1
+    deltaSosPct: 0
+    labelEstadoZona: "PRON\xD3STICO ACTIVO"
+    animacionMercaderista: Datos
+    porque: "Vendes m\xE1s y botas menos pan, pero la oportunidad colaborativa con
+      el molino queda sobre la mesa."
+    nivelColaboracion: 1
+  - letra: 67
+    titulo: Planear juntos con el molino
+    esAcertada: 1
+    deltaOsaPct: 5
+    deltaInvDescriptivo: "\u22122u"
+    deltaInvDir: 1
+    deltaSosPct: 3
+    labelEstadoZona: MOLINO SINCRONIZADO
+    animacionMercaderista: Colaborar
+    porque: "Botas casi nada, vendes m\xE1s y capturas todas las franjas. La harina
+      deja de ser un commodity para ser un pacto."
+    nivelColaboracion: 4

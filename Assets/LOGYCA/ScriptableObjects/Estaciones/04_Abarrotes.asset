@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08db307493728f349ab82bc919ee218b, type: 3}
+  m_Name: 04_Abarrotes
+  m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
+  id: abarrotes
+  nombre: Abarrotes
+  subtitulo: "Surtido y rotaci\xF3n"
+  icono: {fileID: 0}
+  colorPrincipal: {r: 0.114, g: 0.62, b: 0.459, a: 1}
+  camaraVirtualId: abarrotes
+  contexto: "En la secci\xF3n de aceites tienes 38 referencias. La plata invertida
+    subi\xF3 18% este a\xF1o y 6 referencias casi no se mueven."
+  pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
+  opciones:
+  - letra: 65
+    titulo: "Sacar de la g\xF3ndola las 6 referencias de baja rotaci\xF3n"
+    esAcertada: 0
+    deltaOsaPct: 1
+    deltaInvDescriptivo: "\u22126u"
+    deltaInvDir: 1
+    deltaSosPct: -2
+    labelEstadoZona: ANAQUEL DEPURADO
+    animacionMercaderista: Retirar
+    porque: Liberaste plata pero el cliente fiel que buscaba esas marcas se va molesto.
+      El proveedor pierde su espacio.
+    nivelColaboracion: 1
+  - letra: 66
+    titulo: Pago por venta
+    esAcertada: 0
+    deltaOsaPct: 0
+    deltaInvDescriptivo: "\u22122u"
+    deltaInvDir: 1
+    deltaSosPct: 0
+    labelEstadoZona: RIESGO COMPARTIDO
+    animacionMercaderista: Renegociar
+    porque: Liberas capital pero el proveedor sube el precio para cubrir el riesgo.
+      Es un primer paso de confianza.
+    nivelColaboracion: 3
+  - letra: 67
+    titulo: Planear surtido juntos
+    esAcertada: 1
+    deltaOsaPct: 2
+    deltaInvDescriptivo: "\u22124u"
+    deltaInvDir: 1
+    deltaSosPct: 3
+    labelEstadoZona: SURTIDO CONJUNTO
+    animacionMercaderista: Colaborar
+    porque: "Ambos analizan, ambos deciden, ambos responden. Ese es uno de los pilares
+      m\xE1s maduros del OSA colaborativo."
+    nivelColaboracion: 4
