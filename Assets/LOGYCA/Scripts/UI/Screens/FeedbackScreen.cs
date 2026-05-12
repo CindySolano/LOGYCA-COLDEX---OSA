@@ -8,69 +8,64 @@ using LOGYCA.OSA.UI.Widgets;
 namespace LOGYCA.OSA.UI.Screens
 {
     /// <summary>
-    /// Layout rico del .md sección 7.5. No hay distinción visual entre opción
-    /// "acertada" o "desacertada": el resultado siempre se muestra igual, lo
-    /// único que cambia son los KPIs y el texto de feedback según la opción.
+    /// Versión reducida del FeedbackScreen para esta entrega:
+    ///   1. Chip / cabecera con icono dinámico de la estación
+    ///   2. Título de la opción elegida + descripción
+    ///   3. Impactos numéricos (DeltaTable + ShopperCard + ColaboracionCard)
+    ///   4. Botón único "Continuar"
     ///
-    /// Bloques:
-    ///   1. Chip / cabecera (texto y sprite fijos, editables desde Inspector)
-    ///   2. Título de la opción elegida
-    ///   3. Impacto operativo  → DeltaTable con 6 KPIs
-    ///   4. Impacto en el bolsillo → DeltaTable con 2 KPIs
-    ///   5. Impacto en el cliente  → ShopperCard (cara feliz/neutra/triste)
-    ///   6. Tipo de relación con el proveedor → ColaboracionCard
-    ///   7. Lo que pasó → bloques cadena | proveedor + veredicto destacado
-    ///   8. Único botón "Continuar"
+    /// El bloque "Lo que pasó" (cadena/proveedor/veredicto) está fuera de
+    /// este entregable.
     /// </summary>
     public class FeedbackScreen : ScreenController
     {
         [Header("Cabecera (chip + título)")]
-        [SerializeField] private Image chipFondo;          // sprite único, sin distinción
-        [SerializeField] private TMP_Text chipTexto;        // texto fijo, editable abajo
+        [SerializeField] private Image chipFondo;
+        [SerializeField] private TMP_Text chipTexto;
         [SerializeField] private TMP_Text textoTituloOpcion;
+        [SerializeField] private TMP_Text textoDescripcion;
+        [SerializeField] private Image iconoEstacion;
 
         [Tooltip("Texto fijo del chip. Mismo para todas las opciones.")]
         [SerializeField] private string textoChip = "RESULTADO";
+
+        [Tooltip("Texto que aparece debajo del título de la opción.")]
+        [SerializeField] private string textoDecisionRegistrada = "Decisión registrada.";
 
         [Header("Impactos numéricos")]
         [SerializeField] private DeltaTable deltaTable;
         [SerializeField] private ShopperCard shopperCard;
         [SerializeField] private ColaboracionCard colaboracionCard;
 
-        [Header("Lo que pasó")]
-        [SerializeField] private TMP_Text textoFeedbackCadena;
-        [SerializeField] private TMP_Text textoFeedbackProveedor;
-        [SerializeField] private TMP_Text textoVeredicto;
-
         [Header("Botón único")]
         [SerializeField] private Button botonContinuar;
 
         public void Mostrar(EstacionData estacion, OpcionData opcion)
         {
-            Show();
             if (opcion == null) return;
 
             // 1. Cabecera
             if (chipTexto != null) chipTexto.text = textoChip;
             if (textoTituloOpcion != null) textoTituloOpcion.text = $"\"{opcion.titulo}\"";
+            if (textoDescripcion != null) textoDescripcion.text = textoDecisionRegistrada;
 
-            // 2-3. KPIs operativos + bolsillo (6 + 2 cards)
+            // Icono dinámico según la estación
+            if (iconoEstacion != null && estacion != null && estacion.icono != null)
+            {
+                iconoEstacion.sprite = estacion.icono;
+                iconoEstacion.enabled = true;
+            }
+
+            // 2. Impactos numéricos
             deltaTable?.Renderizar(opcion.kpis);
 
-            // 4. Shopper card
             foreach (var kpi in opcion.kpis)
                 if (kpi.tipo == TipoKPI.SatisfaccionShopper)
                     shopperCard?.Configurar(kpi);
 
-            // 5. Colaboración
             colaboracionCard?.Configurar(opcion.nivelColaboracion);
 
-            // 6. Narrativa
-            if (textoFeedbackCadena    != null) textoFeedbackCadena.text    = opcion.feedbackCadena;
-            if (textoFeedbackProveedor != null) textoFeedbackProveedor.text = opcion.feedbackProveedor;
-            if (textoVeredicto         != null) textoVeredicto.text         = opcion.veredicto;
-
-            // 7. Botón
+            // 3. Botón
             if (botonContinuar != null)
             {
                 botonContinuar.onClick.RemoveAllListeners();

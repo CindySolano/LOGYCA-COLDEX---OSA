@@ -20,8 +20,6 @@ namespace LOGYCA.OSA.UI.Screens
 
         public void Mostrar(List<int> niveles, HUDState estadoFinal)
         {
-            Show();
-
             hudBarFinal?.Renderizar(estadoFinal);
 
             if (niveles != null && niveles.Count > 0)

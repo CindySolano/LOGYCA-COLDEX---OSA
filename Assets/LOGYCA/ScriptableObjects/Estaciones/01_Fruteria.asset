@@ -16,7 +16,7 @@ MonoBehaviour:
   nombre: "Fruter\xEDa"
   nombreLargo: "Fruter\xEDa"
   subtitulo: "Rotaci\xF3n y mermas"
-  icono: {fileID: 0}
+  icono: {fileID: 21300000, guid: 7c55266a0d875e04fa7148fc1c0c78be, type: 3}
   colorPrincipal: {r: 0.961, g: 0.376, b: 0.118, a: 1}
   camaraVirtualId: fruteria
   contexto: "La fruter\xEDa tiene mermas del 12% esta semana. La fruta que se da\xF1a

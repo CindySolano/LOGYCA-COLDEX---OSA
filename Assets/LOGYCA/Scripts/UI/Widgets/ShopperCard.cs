@@ -6,23 +6,19 @@ using LOGYCA.OSA.Data;
 namespace LOGYCA.OSA.UI.Widgets
 {
     /// <summary>
-    /// Card grande del bloque "Impacto en el cliente" (.md sección 6.2).
-    /// Cara feliz / neutra / triste según la dirección de SatisfaccionShopper.
-    /// El color del fondo viene del sprite — el script solo swappea sprites.
+    /// Card del bloque "Impacto en el cliente" (.md sección 6.2).
+    /// Versión reducida para esta entrega: sin cara emoji, solo cambia el
+    /// fondo y el texto de estado (SUBE / IGUAL / BAJA).
     /// </summary>
     public class ShopperCard : MonoBehaviour
     {
         [SerializeField] private Image fondo;
-        [SerializeField] private Image cara;
         [SerializeField] private TMP_Text textoEstado;
 
-        [Header("Sprites por estado")]
+        [Header("Sprites de fondo por estado")]
         [SerializeField] private Sprite fondoSube;
         [SerializeField] private Sprite fondoIgual;
         [SerializeField] private Sprite fondoBaja;
-        [SerializeField] private Sprite caraFeliz;
-        [SerializeField] private Sprite caraNeutra;
-        [SerializeField] private Sprite caraTriste;
 
         public void Configurar(KPIData kpi)
         {
@@ -31,24 +27,23 @@ namespace LOGYCA.OSA.UI.Widgets
             switch (kpi.direccion)
             {
                 case Direccion.Sube:
-                    SetSprite(fondoSube, caraFeliz);
+                    SetFondo(fondoSube);
                     if (textoEstado != null) textoEstado.text = "SUBE";
                     break;
                 case Direccion.Baja:
-                    SetSprite(fondoBaja, caraTriste);
+                    SetFondo(fondoBaja);
                     if (textoEstado != null) textoEstado.text = "BAJA";
                     break;
                 default:
-                    SetSprite(fondoIgual, caraNeutra);
+                    SetFondo(fondoIgual);
                     if (textoEstado != null) textoEstado.text = "IGUAL";
                     break;
             }
         }
 
-        private void SetSprite(Sprite f, Sprite c)
+        private void SetFondo(Sprite s)
         {
-            if (fondo != null && f != null) fondo.sprite = f;
-            if (cara  != null && c != null) cara.sprite  = c;
+            if (fondo != null && s != null) fondo.sprite = s;
         }
     }
 }
