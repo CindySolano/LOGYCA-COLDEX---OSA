@@ -16,7 +16,7 @@ MonoBehaviour:
   nombre: Abarrotes
   nombreLargo: Abarrotes
   subtitulo: "Surtido y rotaci\xF3n"
-  icono: {fileID: 0}
+  icono: {fileID: 21300000, guid: 5d3dd4fbfd1b4ea4f9434a548235c197, type: 3}
   colorPrincipal: {r: 0.114, g: 0.62, b: 0.459, a: 1}
   camaraVirtualId: abarrotes
   contexto: "En la secci\xF3n de aceites tienes 38 referencias. La plata invertida

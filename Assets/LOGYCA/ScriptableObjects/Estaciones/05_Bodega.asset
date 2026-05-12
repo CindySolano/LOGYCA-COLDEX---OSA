@@ -16,7 +16,7 @@ MonoBehaviour:
   nombre: Bodega
   nombreLargo: Bodega
   subtitulo: "Reposici\xF3n y trastienda"
-  icono: {fileID: 0}
+  icono: {fileID: 21300000, guid: 3403bf2716dc37944865740af1472112, type: 3}
   colorPrincipal: {r: 0.216, g: 0.541, b: 0.867, a: 1}
   camaraVirtualId: bodega
   contexto: "Una revisi\xF3n muestra algo curioso: en el 7% de las veces que un cliente
