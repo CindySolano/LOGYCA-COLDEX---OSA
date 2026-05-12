@@ -16,7 +16,7 @@ MonoBehaviour:
   nombre: Cajas
   nombreLargo: Cajas registradoras
   subtitulo: Productos de impulso
-  icono: {fileID: 21300000, guid: 050105768d3f7ca40979bdaecf8b46e5, type: 3}
+  icono: {fileID: 21300000, guid: 233eb78d8cfed8145aaf2bc9c734da63, type: 3}
   colorPrincipal: {r: 0.498, g: 0.467, b: 0.867, a: 1}
   camaraVirtualId: caja
   contexto: "En las cajas tienes 24 productos de impulso: chocolatinas, chicles,

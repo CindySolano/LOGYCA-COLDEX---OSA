@@ -28,9 +28,12 @@ namespace LOGYCA.OSA.Core
         [SerializeField] private FeedbackScreen feedbackScreen;
         [SerializeField] private SummaryScreen summaryScreen;
 
-        [Header("HUD persistente")]
+        [Header("HUD persistente (oculto durante toda la experiencia por ahora)")]
         [SerializeField] private GameObject hudRoot;
         [SerializeField] private HUDBar hudBar;
+
+        [Header("Intro pre-Attract (CanvasIntroManager)")]
+        [SerializeField] private IntroManager introManager;
 
         [Header("Cámara, hotspots, mercaderistas")]
         [SerializeField] private CameraSequencer cameraSequencer;
@@ -69,7 +72,7 @@ namespace LOGYCA.OSA.Core
             }
         }
 
-        private void Start() => IrA(AppState.Attract);
+        private void Start() => IrA(AppState.Intro);
 
         // ────────────────── API pública ──────────────────
 
@@ -155,7 +158,7 @@ namespace LOGYCA.OSA.Core
             ResetHotspots();
             ApagarTodosLosContenidos();
             OcultarMercaderistas();
-            IrA(AppState.Attract);
+            IrA(AppState.Intro);  // reset arranca desde el Intro, no desde Attract
         }
 
         // ────────────────── Coroutine principal ──────────────────
@@ -167,18 +170,41 @@ namespace LOGYCA.OSA.Core
 
             // 2. Establecer estado
             State = nuevoEstado;
-            if (hudRoot != null) hudRoot.SetActive(nuevoEstado != AppState.Attract);
 
+            // HUD oculto durante toda la experiencia por el momento.
+            if (hudRoot != null) hudRoot.SetActive(false);
+
+            // Idle timer: NO se trackea en Intro (es la pantalla de bienvenida).
+            //             SÍ se trackea en el resto.
             if (idleTimer != null)
             {
-                if (nuevoEstado == AppState.Attract) idleTimer.StopTracking();
+                if (nuevoEstado == AppState.Intro) idleTimer.StopTracking();
                 else idleTimer.StartTracking();
             }
+
+            // CanvasIntroManager: solo visible en Intro. En cualquier otro estado, off.
+            if (introManager != null && nuevoEstado != AppState.Intro)
+                introManager.gameObject.SetActive(false);
 
             // 3. Setup específico + fade in del nuevo panel
             switch (nuevoEstado)
             {
+                case AppState.Intro:
+                    // Reset duro de todo el estado de juego.
+                    RondaIndex = -1;
+                    ResetHud();
+                    ResetHotspots();
+                    OcultarMercaderistas();
+                    ApagarTodosLosContenidos();
+                    // El IntroManager maneja sus propios fades y cámara internamente.
+                    // Restaurar visual state al inicial (intro panel visible, cameraIntro on, walls on).
+                    if (introManager != null) introManager.Reiniciar();
+                    break;
+
                 case AppState.Attract:
+                    // Actualmente no se usa (el Intro lo reemplaza). Lo dejo por
+                    // compatibilidad: si en algún momento se vuelve a la pantalla
+                    // de Toca para empezar, ya está cableado.
                     RondaIndex = -1;
                     ResetHud();
                     ResetHotspots();

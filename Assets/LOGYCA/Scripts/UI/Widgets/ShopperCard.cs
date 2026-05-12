@@ -24,19 +24,23 @@ namespace LOGYCA.OSA.UI.Widgets
         {
             if (kpi == null || kpi.tipo != TipoKPI.SatisfaccionShopper) return;
 
+            string nombre = ConfiguracionCatalogo.NombreLegible(kpi.tipo); // "Satisfacción del shopper"
+
+            if (textoEstado != null) textoEstado.richText = true;
+
             switch (kpi.direccion)
             {
                 case Direccion.Sube:
                     SetFondo(fondoSube);
-                    if (textoEstado != null) textoEstado.text = "SUBE";
+                    if (textoEstado != null) textoEstado.text = $"{nombre} SUBE <color=#28AA94>▲</color>";
                     break;
                 case Direccion.Baja:
                     SetFondo(fondoBaja);
-                    if (textoEstado != null) textoEstado.text = "BAJA";
+                    if (textoEstado != null) textoEstado.text = $"{nombre} BAJA <color=#F5601E>▼</color>";
                     break;
                 default:
                     SetFondo(fondoIgual);
-                    if (textoEstado != null) textoEstado.text = "IGUAL";
+                    if (textoEstado != null) textoEstado.text = $"{nombre} IGUAL <color=#888780>→</color>";
                     break;
             }
         }

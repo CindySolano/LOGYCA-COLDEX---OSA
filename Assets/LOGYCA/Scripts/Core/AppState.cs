@@ -1,13 +1,14 @@
 namespace LOGYCA.OSA.Core
 {
     /// <summary>
-    /// Estados visibles del flujo. "Decision" no existe como estado propio:
+    /// Estados visibles del flujo. Decision no existe como estado propio:
     /// los 3 botones viven dentro del Panel_Situation y se re-muestran
     /// (sin animación de entrada) cuando el usuario pulsa "Probar otra".
     /// </summary>
     public enum AppState
     {
-        Attract,
+        Intro,          // CanvasIntroManager (con sub-paneles Intro + Instrucciones)
+        Attract,        // Panel_Attract — actualmente reemplazado por Intro pero se conserva por compat
         MapSelection,
         Situation,
         Feedback,

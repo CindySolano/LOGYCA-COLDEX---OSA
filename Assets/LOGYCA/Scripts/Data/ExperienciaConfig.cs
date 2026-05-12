@@ -10,7 +10,8 @@ namespace LOGYCA.OSA.Data
         public List<EstacionData> estaciones = new List<EstacionData>();
 
         [Header("Tiempos (segundos)")]
-        public float idleTimeoutSeconds = 60f;
+        [Tooltip("Inactividad para que vuelva al Intro. 300 = 5 minutos.")]
+        public float idleTimeoutSeconds = 300f;
         [Tooltip("Duración del blend de Cinemachine al hacer dolly al hotspot (frame 02).")]
         public float dollyInSeconds = 1.6f;
         [Tooltip("Duración del blend al volver a la vista general (frame 05).")]

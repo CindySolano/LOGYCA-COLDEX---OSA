@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using LOGYCA.OSA.Core;
 
 public class IntroManager : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class IntroManager : MonoBehaviour
         cvGroupInstruction.interactable = true;
         cvGroupInstruction.blocksRaycasts = true;
         yield return FadeCanvasGroup(cvGroupInstruction, 0f, 1f, fadeDuration);
-       
+
     }
 
     public void OnStartGame()
@@ -47,6 +48,11 @@ public class IntroManager : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
         TurnOffObjects();
 
+        // Le pasa el control al state machine: arranca MapSelection (Ronda 1).
+        if (GameManager.Instance != null) GameManager.Instance.EmpezarExperiencia();
+
+        // El CanvasIntroManager se apaga para no consumir layout/raycasts durante el juego.
+        gameObject.SetActive(false);
     }
 
     public void TurnOffObjects()
@@ -56,6 +62,41 @@ public class IntroManager : MonoBehaviour
             obj.SetActive(false);
         }
 
+    }
+
+    /// <summary>
+    /// Restaura todo al estado inicial del Intro:
+    ///   - Panel Intro visible (alpha 1, interactable)
+    ///   - Panel Instrucciones invisible
+    ///   - cameraIntro activa, cameraGame inactiva
+    ///   - walls activos
+    /// Lo llama el GameManager cuando hace reset desde el Summary.
+    /// </summary>
+    public void Reiniciar()
+    {
+        gameObject.SetActive(true);
+
+        if (cvGroupIntro != null)
+        {
+            cvGroupIntro.gameObject.SetActive(true);
+            cvGroupIntro.alpha = 1f;
+            cvGroupIntro.interactable = true;
+            cvGroupIntro.blocksRaycasts = true;
+        }
+
+        if (cvGroupInstruction != null)
+        {
+            cvGroupInstruction.alpha = 0f;
+            cvGroupInstruction.interactable = false;
+            cvGroupInstruction.blocksRaycasts = false;
+            cvGroupInstruction.gameObject.SetActive(false);
+        }
+
+        if (cameraIntro != null) cameraIntro.SetActive(true);
+        if (cameraGame  != null) cameraGame.SetActive(false);
+
+        foreach (GameObject obj in wallObjs)
+            if (obj != null) obj.SetActive(true);
     }
 
 
