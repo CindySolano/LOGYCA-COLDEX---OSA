@@ -5,6 +5,7 @@ using LOGYCA.OSA.Data;
 using LOGYCA.OSA.UI.Screens;
 using LOGYCA.OSA.UI.Widgets;
 using LOGYCA.OSA.CameraCtrl;
+using LOGYCA.OSA.Audio;
 
 namespace LOGYCA.OSA.Core
 {
@@ -34,6 +35,9 @@ namespace LOGYCA.OSA.Core
 
         [Header("Intro pre-Attract (CanvasIntroManager)")]
         [SerializeField] private IntroManager introManager;
+
+        [Header("Audio ambiente (off en Intro/Attract · on durante el juego)")]
+        [SerializeField] private AmbientAudio ambientAudio;
 
         [Header("Cámara, hotspots, mercaderistas")]
         [SerializeField] private CameraSequencer cameraSequencer;
@@ -185,6 +189,14 @@ namespace LOGYCA.OSA.Core
             // CanvasIntroManager: solo visible en Intro. En cualquier otro estado, off.
             if (introManager != null && nuevoEstado != AppState.Intro)
                 introManager.gameObject.SetActive(false);
+
+            // Audio ambiente: off en Intro/Attract · on durante el juego.
+            if (ambientAudio != null)
+            {
+                bool enJuego = nuevoEstado != AppState.Intro && nuevoEstado != AppState.Attract;
+                if (enJuego) ambientAudio.Reproducir();
+                else         ambientAudio.Detener();
+            }
 
             // 3. Setup específico + fade in del nuevo panel
             switch (nuevoEstado)
