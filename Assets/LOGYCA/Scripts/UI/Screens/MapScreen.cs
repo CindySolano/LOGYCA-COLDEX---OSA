@@ -1,42 +1,40 @@
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using LOGYCA.OSA.Core;
-using LOGYCA.OSA.UI.Widgets;
+using LOGYCA.OSA.Data;
 
 namespace LOGYCA.OSA.UI.Screens
 {
     /// <summary>
-    /// Frame 01 de la referencia (slide 8). El Canvas en sí casi no tiene
-    /// elementos: la mayoría son hotspots 3D anclados al mundo. Este script
-    /// recorre los hotspots de la escena y les asigna estado:
-    ///   - Visitado  → check teal
-    ///   - Próximo   → anillo pulsando + label PRÓXIMA (es el clickeable)
-    ///   - Inactivo  → apagado
+    /// Panel transitorio que aparece SOLO durante el movimiento de cámara.
+    /// Escribe directamente sobre un TMP_Text con el formato:
+    ///   "<b>Ronda {0} de {1}</b> | Acercando cámara al hotspot {2}"
+    /// Donde {0}=ronda actual · {1}=total · {2}=nombre del destino.
     /// </summary>
     public class MapScreen : ScreenController
     {
-        [SerializeField] private List<Hotspot3D> hotspots = new List<Hotspot3D>();
-        [SerializeField] private RondaCounter rondaCounter;
+        [Header("Referencia al texto")]
+        [Tooltip("TMP_Text que se va a llenar con la plantilla de abajo.")]
+        [SerializeField] private TMP_Text textoRonda;
 
-        public void Mostrar(HashSet<string> visitadas, int rondaCero)
+        [Header("Plantilla del texto")]
+        [Tooltip("{0}=ronda actual · {1}=total · {2}=nombre largo de la estación")]
+        [TextArea(2, 4)]
+        [SerializeField] private string plantilla = "<b>Ronda {0} de {1}</b> | Acercando cámara al hotspot {2}";
+
+        public void MostrarTransicion(int rondaActual, int total, EstacionData destino)
         {
             Show();
+            if (textoRonda == null) return;
 
-            int total = hotspots.Count;
-            int rondaActual = Mathf.Min(rondaCero + 1, Mathf.Max(1, total));
-            rondaCounter?.Configurar(rondaActual, total, "acercando cámara al hotspot");
+            string nombreDestino = destino != null ? ObtenerNombre(destino) : "";
+            textoRonda.richText = true;
+            textoRonda.text = string.Format(plantilla, rondaActual, total, nombreDestino);
+        }
 
-            // primer hotspot no visitado en orden de la lista = PROXIMO
-            Hotspot3D proximo = null;
-            foreach (var h in hotspots)
-            {
-                if (h == null || h.estacion == null) continue;
-                bool ya = visitadas != null && visitadas.Contains(h.estacion.id);
-                if (ya) h.SetEstado(Hotspot3D.Estado.Visitado);
-                else if (proximo == null) proximo = h;
-                else h.SetEstado(Hotspot3D.Estado.Inactivo);
-            }
-            proximo?.SetEstado(Hotspot3D.Estado.Proximo);
+        private static string ObtenerNombre(EstacionData e)
+        {
+            return !string.IsNullOrEmpty(e.nombreLargo) ? e.nombreLargo : e.nombre;
         }
     }
 }

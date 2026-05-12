@@ -14,12 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
   id: bodega
   nombre: Bodega
-  subtitulo: "Reposici\xF3n"
+  nombreLargo: Bodega
+  subtitulo: "Reposici\xF3n y trastienda"
   icono: {fileID: 0}
   colorPrincipal: {r: 0.216, g: 0.541, b: 0.867, a: 1}
   camaraVirtualId: bodega
-  contexto: "En el 7% de las veces que un cliente no encuentra un producto, ese producto
-    s\xED est\xE1 en bodega. El equipo repone en horarios fijos."
+  contexto: "Una revisi\xF3n muestra algo curioso: en el 7% de las veces que un cliente
+    no encuentra un producto, ese producto S\xCD est\xE1 en la bodega de la tienda,
+    solo que nadie lo subi\xF3 a la g\xF3ndola. El equipo repone en horarios fijos
+    (3 veces al d\xEDa) y por costumbre, no mirando qu\xE9 se est\xE1 acabando."
   pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
   opciones:
   - letra: 65
@@ -29,32 +32,126 @@ MonoBehaviour:
     deltaInvDescriptivo: "\u2192 0"
     deltaInvDir: 2
     deltaSosPct: 1
-    labelEstadoZona: "REPOSICI\xD3N REACTIVA"
-    animacionMercaderista: Reponer
-    porque: "Plata dormida que ahora se vende. Pero el proveedor se beneficia sin
-      enterarse \u2014 la oportunidad colaborativa queda intacta."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 90% a 95%
+    - tipo: 1
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: Siempre se ve llena
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: No aplica
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 0
+      valorDescriptivo: +9% (mano de obra extra)
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +9%
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +16%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 1
+    feedbackCadena: "Resolviste el problema sin comprar nada nuevo: el inventario
+      que ya ten\xEDas ahora s\xED llega al cliente. Plata dormida convertida en
+      ventas."
+    feedbackProveedor: "Vende m\xE1s porque la cadena exhibe m\xE1s, pero no se enter\xF3
+      de nada. Para \xE9l es solo m\xE1s volumen."
+    veredicto: "La cadena gana mucho con un cambio interno. El proveedor se beneficia
+      sin saberlo. Buena decisi\xF3n, pero deja la oportunidad colaborativa intacta."
+    animacionMercaderista: Reponer
   - letra: 66
-    titulo: Reorganizar la bodega
+    titulo: "Reorganizar la bodega: lo que m\xE1s se vende cerca de la puerta"
     esAcertada: 0
     deltaOsaPct: 3
-    deltaInvDescriptivo: "\u22121u"
+    deltaInvDescriptivo: -1u
     deltaInvDir: 1
     deltaSosPct: 0
-    labelEstadoZona: BODEGA ORDENADA
-    animacionMercaderista: Organizar
-    porque: "Mejora r\xE1pida y barata, pero el problema de fondo (los horarios fijos
-      de reposici\xF3n) sigue ah\xED."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 90% a 93%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 14 a 12 d\xEDas"
+    - tipo: 2
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 1
+      valorDescriptivo: -3%
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +4%
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +6%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 1
+    feedbackCadena: "Ahora se reabastece m\xE1s r\xE1pido y se cometen menos errores.
+      Inversi\xF3n m\xEDnima, mejora r\xE1pida."
+    feedbackProveedor: Sin cambios. Sigue despachando como siempre y vendiendo lo
+      mismo.
+    veredicto: "Ganancia r\xE1pida y barata, pero sin colaboraci\xF3n. El problema
+      de fondo (horarios fijos) sigue ah\xED."
+    animacionMercaderista: Organizar
   - letra: 67
     titulo: "Sincronizar bodega y producci\xF3n del proveedor"
     esAcertada: 1
     deltaOsaPct: 6
-    deltaInvDescriptivo: "\u22124u"
+    deltaInvDescriptivo: -4u
     deltaInvDir: 1
     deltaSosPct: 2
-    labelEstadoZona: BODEGA SINCRONIZADA
-    animacionMercaderista: Colaborar
-    porque: "Libera capital congelado y los dos jugando como un equipo capturan la
-      rentabilidad combinada m\xE1s alta."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 90% a 96%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 14 a 6 d\xEDas"
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: Optimizado
+    - tipo: 3
+      direccion: 1
+      valorDescriptivo: "Baja de 4 a 2 d\xEDas"
+    - tipo: 4
+      direccion: 0
+      valorDescriptivo: +10%
+    - tipo: 5
+      direccion: 0
+      valorDescriptivo: "+6% (software y gesti\xF3n conjunta)"
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +12%
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +18%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 4
+    feedbackCadena: "Libera espacio de bodega que se vuelve venta. Reduce capital
+      congelado a la mitad. La inversi\xF3n est\xE1 en software y gesti\xF3n."
+    feedbackProveedor: "Planifica producci\xF3n con datos reales, optimiza rutas,
+      reduce devoluciones. Comparte el riesgo de quiebre y el beneficio."
+    veredicto: "Ganan los dos jugando como un equipo. Requiere confianza y tecnolog\xEDa,
+      pero la rentabilidad combinada es la m\xE1s alta."
+    animacionMercaderista: Colaborar

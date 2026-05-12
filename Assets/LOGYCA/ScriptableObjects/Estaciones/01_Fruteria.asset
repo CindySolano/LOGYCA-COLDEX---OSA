@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
   id: fruteria
   nombre: "Fruter\xEDa"
+  nombreLargo: "Fruter\xEDa"
   subtitulo: "Rotaci\xF3n y mermas"
   icono: {fileID: 0}
   colorPrincipal: {r: 0.961, g: 0.376, b: 0.118, a: 1}
@@ -29,32 +30,126 @@ MonoBehaviour:
     deltaInvDescriptivo: "\u2192 0"
     deltaInvDir: 2
     deltaSosPct: 2
-    labelEstadoZona: "FRUTER\xCDA ROTADA"
-    animacionMercaderista: Rotar
-    porque: "Rotar la fruta protege OSA sin sacrificar inventario. La merma baja
-      porque la fruta vieja sale antes de da\xF1arse."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: +4%
+    - tipo: 1
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: +2%
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +3%
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +5%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 1
+    feedbackCadena: "Soluci\xF3n simple, sin costo, mejora la rotaci\xF3n natural
+      y baja la merma. La cadena resuelve sola el problema."
+    feedbackProveedor: "No se entera del problema ni participa de la soluci\xF3n.
+      Sigue despachando igual."
+    veredicto: "Buena soluci\xF3n operativa, pero la oportunidad colaborativa queda
+      sobre la mesa."
+    animacionMercaderista: Rotar
   - letra: 66
     titulo: Bajar el precio de la fruta del fondo
     esAcertada: 0
-    deltaOsaPct: -2
-    deltaInvDescriptivo: "\u22121u"
+    deltaOsaPct: 2
+    deltaInvDescriptivo: -10u
     deltaInvDir: 1
-    deltaSosPct: -1
-    labelEstadoZona: "FRUTER\xCDA EN PROMOCI\xD3N"
-    animacionMercaderista: Promocion
-    porque: "Resolviste hoy con descuento, pero la merma estructural sigue ah\xED
-      y el margen se redujo."
+    deltaSosPct: 0
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: +2%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: -10 unidades
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: +5%
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 2
+      valorDescriptivo: "Casi igual (vendes lo mismo m\xE1s barato)"
+    - tipo: 7
+      direccion: 1
+      valorDescriptivo: -6%
+    - tipo: 8
+      direccion: 2
+      valorDescriptivo: Igual
     nivelColaboracion: 1
+    feedbackCadena: "Tapaste el hueco de hoy con descuentos, pero rebajar precios
+      te baj\xF3 la ganancia."
+    feedbackProveedor: "No se entera de la merma. La pr\xF3xima semana se repite
+      la misma historia."
+    veredicto: "Pierden los dos, solo que el proveedor todav\xEDa no lo sabe. El
+      problema estructural sigue intacto."
+    animacionMercaderista: Promocion
   - letra: 67
     titulo: "Pedir menos fruta al pr\xF3ximo despacho"
     esAcertada: 0
     deltaOsaPct: -6
-    deltaInvDescriptivo: "\u22123u"
+    deltaInvDescriptivo: -3u
     deltaInvDir: 1
     deltaSosPct: -4
-    labelEstadoZona: "FRUTER\xCDA SIN ATENDER"
-    animacionMercaderista: PedirMenos
-    porque: "Pedir menos baja la merma pero tambi\xE9n el OSA y el espacio en g\xF3ndola.
-      La competencia ocupa el aire que cediste."
+    kpis:
+    - tipo: 0
+      direccion: 1
+      valorDescriptivo: -6%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: -3 unidades
+    - tipo: 2
+      direccion: 1
+      valorDescriptivo: -4%
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 1
+      valorDescriptivo: -5%
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 1
+      valorDescriptivo: "-4% (m\xE1s quiebres)"
+    - tipo: 7
+      direccion: 1
+      valorDescriptivo: -3%
+    - tipo: 8
+      direccion: 1
+      valorDescriptivo: Baja
     nivelColaboracion: 2
+    feedbackCadena: "Pedir menos baja la merma pero tambi\xE9n baja el OSA y el espacio
+      en g\xF3ndola. La cadena pierde ventas y deja de captar a clientes que buscan
+      fruta."
+    feedbackProveedor: "Recibe un pedido menor sin contexto: se queda con inventario
+      que tendr\xE1 que colocar en otro lado."
+    veredicto: "Soluci\xF3n reactiva que crea m\xE1s problemas. La operaci\xF3n parece
+      m\xE1s eficiente pero el cliente y la venta sufren."
+    animacionMercaderista: PedirMenos

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
   id: caja
   nombre: Cajas
+  nombreLargo: Cajas registradoras
   subtitulo: Productos de impulso
   icono: {fileID: 0}
   colorPrincipal: {r: 0.498, g: 0.467, b: 0.867, a: 1}
@@ -28,35 +29,130 @@ MonoBehaviour:
     titulo: Poner una persona dedicada a reponer las cajas cada 2 horas
     esAcertada: 0
     deltaOsaPct: 4
-    deltaInvDescriptivo: "\u22122u"
+    deltaInvDescriptivo: -2u
     deltaInvDir: 1
     deltaSosPct: 1
-    labelEstadoZona: REPONEDOR EN TURNO
-    animacionMercaderista: Reponer
-    porque: Ganas mucho en impulso, pero el sueldo del reponedor se come parte de
-      la utilidad y el proveedor queda fuera de la jugada.
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 82% a 93%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 6 a 4 d\xEDas"
+    - tipo: 2
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 0
+      valorDescriptivo: +11% (sueldo del reponedor)
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +15% en impulso
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +18%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 1
+    feedbackCadena: "La cadena gana mucho porque el impulso es de los productos con
+      m\xE1s margen. El sueldo del reponedor se paga solo con las ventas extras."
+    feedbackProveedor: "Vende un poco m\xE1s, pero sin enterarse. Para \xE9l es una
+      venta normal, no hay nada distinto en la relaci\xF3n."
+    veredicto: La cadena resuelve sola y gana. El proveedor se beneficia indirectamente
+      pero queda fuera de la jugada.
+    animacionMercaderista: Reponer
   - letra: 66
-    titulo: "Que la marca l\xEDder gestione y reponga toda la zona de cajas"
+    titulo: "Que la marca l\xEDder gestione y reponga toda la zona de cajas (delegaci\xF3n)"
     esAcertada: 0
     deltaOsaPct: 5
-    deltaInvDescriptivo: "\u22123u"
+    deltaInvDescriptivo: -3u
     deltaInvDir: 1
     deltaSosPct: -2
-    labelEstadoZona: ZONA DELEGADA
-    animacionMercaderista: Delegar
-    porque: "Vendes m\xE1s sin operar la zona, pero cediste el control de tu espacio
-      m\xE1s rentable. Es delegaci\xF3n, no colaboraci\xF3n."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 82% a 96%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 6 a 3 d\xEDas"
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: Optimizado por la marca
+    - tipo: 3
+      direccion: 1
+      valorDescriptivo: "Reposici\xF3n diaria"
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Asumido por el proveedor
+    - tipo: 5
+      direccion: 1
+      valorDescriptivo: -8% (lo asume el proveedor)
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +22% en impulso
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +25%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 2
+    feedbackCadena: "No tienes que preocuparte por las cajas: la marca repone, decide
+      variedad y asume el riesgo. La cadena cobra por el espacio y por la venta.
+      Pero pierde control de la zona m\xE1s rentable."
+    feedbackProveedor: "Tiene control total de la mejor zona de la tienda. Decide
+      qu\xE9 exhibir seg\xFAn ventas reales y captura todo el valor."
+    veredicto: "Esto no es colaboraci\xF3n, es delegaci\xF3n. Funciona pero es transaccional.
+      Si la marca cambia de estrategia, la cadena queda expuesta."
+    animacionMercaderista: Delegar
   - letra: 67
     titulo: "Comit\xE9 conjunto cadena-proveedor con datos en tiempo real"
     esAcertada: 1
     deltaOsaPct: 6
-    deltaInvDescriptivo: "\u22123u"
+    deltaInvDescriptivo: -3u
     deltaInvDir: 1
     deltaSosPct: 3
-    labelEstadoZona: "COMIT\xC9 ACTIVO"
-    animacionMercaderista: Colaborar
-    porque: "Mantienes el control de la zona y sum\xE1s la inteligencia del proveedor.
-      Ambos ven los datos y deciden juntos: mejor margen y aprendizaje compartido."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 82% a 94%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 6 a 3 d\xEDas"
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: Optimizado por datos
+    - tipo: 3
+      direccion: 1
+      valorDescriptivo: "Reposici\xF3n ajustada"
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 0
+      valorDescriptivo: "+5% (comit\xE9 y software)"
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +19% en impulso
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +21%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 4
+    feedbackCadena: "Mantienes el control de la zona y sum\xE1s la inteligencia del
+      proveedor. Ambos ven los datos en tiempo real y ajustan juntos."
+    feedbackProveedor: "Participa en decisiones reales, no solo despacha. Aporta
+      conocimiento de categor\xEDa y aprende del comportamiento de compra en esta
+      tienda."
+    veredicto: Ganan los dos sin que ninguno pierda control. Esta es la diferencia
+      entre delegar (B) y colaborar (C).
+    animacionMercaderista: Colaborar

@@ -14,47 +14,145 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
   id: abarrotes
   nombre: Abarrotes
+  nombreLargo: Abarrotes
   subtitulo: "Surtido y rotaci\xF3n"
   icono: {fileID: 0}
   colorPrincipal: {r: 0.114, g: 0.62, b: 0.459, a: 1}
   camaraVirtualId: abarrotes
   contexto: "En la secci\xF3n de aceites tienes 38 referencias. La plata invertida
-    subi\xF3 18% este a\xF1o y 6 referencias casi no se mueven."
+    en este inventario subi\xF3 18% este a\xF1o y 6 referencias se venden menos de
+    2 unidades por semana. El cliente s\xED encuentra lo que busca, pero est\xE1s
+    cargando con mucho inventario que no se mueve."
   pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
   opciones:
   - letra: 65
-    titulo: "Sacar de la g\xF3ndola las 6 referencias de baja rotaci\xF3n"
+    titulo: "Sacar de la g\xF3ndola las 6 referencias que casi no se venden"
     esAcertada: 0
     deltaOsaPct: 1
-    deltaInvDescriptivo: "\u22126u"
+    deltaInvDescriptivo: -6 refs
     deltaInvDir: 1
     deltaSosPct: -2
-    labelEstadoZona: ANAQUEL DEPURADO
-    animacionMercaderista: Retirar
-    porque: Liberaste plata pero el cliente fiel que buscaba esas marcas se va molesto.
-      El proveedor pierde su espacio.
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 96% a 97%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 45 a 32 d\xEDas"
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: "+30% para las que s\xED se venden"
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 1
+      valorDescriptivo: -4%
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: "+3% (las top tienen m\xE1s visibilidad)"
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +11%
+    - tipo: 8
+      direccion: 1
+      valorDescriptivo: Baja
     nivelColaboracion: 1
+    feedbackCadena: "Liberaste plata y los productos top se ven mejor. Vendes un
+      poco m\xE1s. Pero el cliente fiel que buscaba esa marca espec\xEDfica se va
+      molesto."
+    feedbackProveedor: Las marcas que sacaste pierden su espacio. Su producto deja
+      de existir en tu tienda sin oportunidad de defenderse.
+    veredicto: "La cadena gana en margen, el proveedor pierde categ\xF3ricamente
+      y el cliente se va inc\xF3modo."
+    animacionMercaderista: Retirar
   - letra: 66
-    titulo: Pago por venta
+    titulo: Acordar con el proveedor que solo le pagas cuando vendes el producto
     esAcertada: 0
     deltaOsaPct: 0
-    deltaInvDescriptivo: "\u22122u"
+    deltaInvDescriptivo: -2u
     deltaInvDir: 1
     deltaSosPct: 0
-    labelEstadoZona: RIESGO COMPARTIDO
-    animacionMercaderista: Renegociar
-    porque: Liberas capital pero el proveedor sube el precio para cubrir el riesgo.
-      Es un primer paso de confianza.
+    kpis:
+    - tipo: 0
+      direccion: 2
+      valorDescriptivo: Igual, 96%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 45 a 38 d\xEDas"
+    - tipo: 2
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 7
+      direccion: 1
+      valorDescriptivo: -3% (el proveedor sube precio)
+    - tipo: 8
+      direccion: 2
+      valorDescriptivo: Igual
     nivelColaboracion: 3
+    feedbackCadena: Mantienes todas las referencias y liberas plata congelada. Pero
+      el proveedor te sube el precio para cubrir el riesgo.
+    feedbackProveedor: "Ahora carga con el riesgo del inventario sin vender. Sube
+      el precio para protegerse, pero gana visibilidad de qu\xE9 se vende y d\xF3nde."
+    veredicto: "Empiezan a colaborar, pero todav\xEDa no es un pacto equilibrado.
+      Es un primer paso de confianza, no el destino final."
+    animacionMercaderista: Renegociar
   - letra: 67
-    titulo: Planear surtido juntos
+    titulo: Planear el surtido juntos cada mes con datos compartidos
     esAcertada: 1
     deltaOsaPct: 2
-    deltaInvDescriptivo: "\u22124u"
+    deltaInvDescriptivo: -4u
     deltaInvDir: 1
     deltaSosPct: 3
-    labelEstadoZona: SURTIDO CONJUNTO
-    animacionMercaderista: Colaborar
-    porque: "Ambos analizan, ambos deciden, ambos responden. Ese es uno de los pilares
-      m\xE1s maduros del OSA colaborativo."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 96% a 98%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 45 a 28 d\xEDas"
+    - tipo: 2
+      direccion: 0
+      valorDescriptivo: "Optimizado por categor\xEDa"
+    - tipo: 3
+      direccion: 1
+      valorDescriptivo: "Baja de 7 a 4 d\xEDas"
+    - tipo: 4
+      direccion: 1
+      valorDescriptivo: -12%
+    - tipo: 5
+      direccion: 0
+      valorDescriptivo: +3% (reuniones mensuales)
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +9%
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +19%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 4
+    feedbackCadena: "La cadena aporta datos de comportamiento del shopper, el proveedor
+      aporta conocimiento de su categor\xEDa. Las decisiones son compartidas, as\xED
+      que ambos las defienden y las ejecutan."
+    feedbackProveedor: "Participa en las decisiones de qu\xE9 se queda y qu\xE9 sale.
+      Optimiza su portafolio, reduce devoluciones, baja costos y vende m\xE1s."
+    veredicto: "Ganan los dos al m\xE1ximo. Esto es planeaci\xF3n conjunta de surtido:
+      ambos analizan, ambos deciden, ambos responden."
+    animacionMercaderista: Colaborar

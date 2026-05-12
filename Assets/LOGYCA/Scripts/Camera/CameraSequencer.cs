@@ -55,6 +55,8 @@ namespace LOGYCA.OSA.CameraCtrl
         {
             if (estacion == null) { IrAVistaGeneral(); return; }
             var slot = camarasEstacion.Find(c => c != null && c.id == estacion.camaraVirtualId);
+            if (slot == null)
+                Debug.LogWarning($"[CameraSequencer] No hay CameraSlot con id='{estacion.camaraVirtualId}'. Slots disponibles: [{string.Join(", ", camarasEstacion.ConvertAll(c => c?.id ?? "null"))}] · usando fallback vistaGeneral");
             Activar(slot ?? vistaGeneral);
         }
 
@@ -68,9 +70,11 @@ namespace LOGYCA.OSA.CameraCtrl
 
         private void Activar(CameraSlot slot)
         {
-            if (slot == null) return;
+            if (slot == null) { Debug.LogError("[CameraSequencer] slot null — ni siquiera vistaGeneral está asignado"); return; }
+            if (slot.virtualCamera == null) { Debug.LogError($"[CameraSequencer] slot id='{slot.id}' tiene virtualCamera NULL — arrastra la CinemachineCamera"); return; }
             DesactivarTodas();
-            if (slot.virtualCamera != null) slot.virtualCamera.Priority = PriorityActive;
+            slot.virtualCamera.Priority = PriorityActive;
+            Debug.Log($"[CameraSequencer] Activando '{slot.id}' ({slot.virtualCamera.name}) → Priority {PriorityActive}");
         }
 
         private void DesactivarTodas()

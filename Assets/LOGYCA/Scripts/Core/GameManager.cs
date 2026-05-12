@@ -9,14 +9,21 @@ using LOGYCA.OSA.CameraCtrl;
 namespace LOGYCA.OSA.Core
 {
     /// <summary>
-    /// Máquina de estados central. Implementa los 5 pasos del slide 4:
-    ///   01 Vista general → 02 Acercamiento → 03 Dato + pregunta →
-    ///   04 Decide y feedback (mercaderista actúa, HUD se anima) →
-    ///   05 Vuelve al mapa (pull-out)
+    /// Flujo secuencial:
+    ///   Attract → [Ronda 1 → Ronda 2 → ... → Ronda 5] → Summary
     ///
-    /// Decision no es un panel propio: los 3 botones viven dentro de Panel_Situation.
-    /// "Probar otra decisión" llama a SituationScreen.MostrarSinFade() para reusar
-    /// el mismo panel sin re-animar la entrada.
+    /// Estados visuales por ronda:
+    ///   - Idle:        hotspot de la ronda actual está Activo (pulsa, alpha 100)
+    ///                  los demás están Dormidos (alpha bajo, no clickeables)
+    ///   - Transición:  click en hotspot → Panel_Map visible "Acercando cámara al hotspot X"
+    ///                  cámara hace dolly suave (1.6 s) · mercaderista entra a Idle
+    ///   - Pregunta:    Panel_Map se apaga, aparece Panel_Situación con DATO + 3 botones
+    ///   - Acción:      click en opción → mercaderista trigger anim · gondolaContenido
+    ///                  se enciende si esAcertada · HUD se anima
+    ///   - Feedback:    Panel_Feedback con 9 KPIs + cadena/proveedor/veredicto
+    ///                  Único botón "Continuar"
+    ///   - Continuar:   apaga hotspot actual (queda Visitado) · cámara pull-out ·
+    ///                  prende el siguiente hotspot (Activo) · loop o Summary
     /// </summary>
     public class GameManager : MonoBehaviour
     {
@@ -32,15 +39,14 @@ namespace LOGYCA.OSA.Core
         [SerializeField] private FeedbackScreen feedbackScreen;
         [SerializeField] private SummaryScreen summaryScreen;
 
-        [Header("HUD persistente (vive fuera del stack de paneles)")]
+        [Header("HUD persistente")]
         [SerializeField] private GameObject hudRoot;
         [SerializeField] private HUDBar hudBar;
 
-        [Header("Cámara y temporizador")]
+        [Header("Cámara, hotspots, mercaderistas")]
         [SerializeField] private CameraSequencer cameraSequencer;
         [SerializeField] private IdleTimer idleTimer;
-
-        [Header("Mercaderista por estación (mapeo por id)")]
+        [SerializeField] private List<Hotspot3D> hotspots = new List<Hotspot3D>();
         [SerializeField] private List<MercaderistaSlot> mercaderistas = new List<MercaderistaSlot>();
 
         [System.Serializable]
@@ -48,17 +54,16 @@ namespace LOGYCA.OSA.Core
         {
             public string estacionId;
             public MercaderistaController mercaderista;
-            public GondolaState gondolaState;
+            public GondolaContenido gondolaContenido;
         }
 
         public AppState State { get; private set; }
-        public EstacionData EstacionActual { get; private set; }
+        public EstacionData EstacionActual => RondaIndex >= 0 && RondaIndex < config.estaciones.Count
+                                                ? config.estaciones[RondaIndex] : null;
         public OpcionData OpcionActual { get; private set; }
         public ExperienciaConfig Config => config;
         public HUDState Hud { get; private set; }
-
-        private readonly HashSet<string> visitadas = new HashSet<string>();
-        private readonly List<int> nivelesElegidos = new List<int>();
+        public int RondaIndex { get; private set; } = -1;
 
         private void Awake()
         {
@@ -74,12 +79,12 @@ namespace LOGYCA.OSA.Core
 
         private void Start() => IrA(AppState.Attract);
 
+        // -------- API pública --------
+
         public void IrA(AppState nuevoEstado)
         {
             State = nuevoEstado;
             OcultarPantallas();
-
-            // HUD: oculto sólo en Attract
             if (hudRoot != null) hudRoot.SetActive(nuevoEstado != AppState.Attract);
 
             if (idleTimer != null)
@@ -91,26 +96,29 @@ namespace LOGYCA.OSA.Core
             switch (nuevoEstado)
             {
                 case AppState.Attract:
+                    RondaIndex = -1;
                     ResetHud();
+                    ResetHotspots();
+                    OcultarMercaderistas();
                     cameraSequencer?.IrAVistaAttract();
                     attractScreen?.Show();
                     break;
 
-                case AppState.MapSelection:                  // paso 01
+                case AppState.MapSelection:
+                    // primer entrada al loop: arrancar ronda 1
+                    if (RondaIndex < 0) RondaIndex = 0;
                     cameraSequencer?.IrAVistaGeneral();
                     OcultarMercaderistas();
-                    mapScreen?.Mostrar(visitadas, nivelesElegidos.Count);
+                    ConfigurarHotspotsParaRonda();
                     RefrescarHud();
                     break;
 
-                case AppState.Situation:                     // pasos 02 + 03
-                    cameraSequencer?.IrAEstacion(EstacionActual);
-                    MostrarMercaderista(EstacionActual?.id);
-                    situationScreen?.Mostrar(EstacionActual);
-                    RefrescarHud();
+                case AppState.Situation:
+                    // transición de cámara + Panel_Map visible mientras dura el dolly
+                    StartCoroutine(TransicionHaciaSituation());
                     break;
 
-                case AppState.Feedback:                      // paso 04
+                case AppState.Feedback:
                     StartCoroutine(EjecutarFeedback());
                     break;
 
@@ -121,79 +129,207 @@ namespace LOGYCA.OSA.Core
             }
         }
 
+        /// <summary>Llamado por Attract al primer toque.</summary>
+        public void EmpezarExperiencia()
+        {
+            RondaIndex = 0;
+            IrA(AppState.MapSelection);
+        }
+
+        /// <summary>Llamado por Hotspot3D cuando se hace click sobre el Activo.</summary>
         public void SeleccionarEstacion(EstacionData estacion)
         {
-            EstacionActual = estacion;
+            Debug.Log($"[GameManager] SeleccionarEstacion · estacion={estacion?.id ?? "null"} · ronda={RondaIndex} · esperada={(RondaIndex >= 0 && RondaIndex < config.estaciones.Count ? config.estaciones[RondaIndex].id : "fuera de rango")}");
+            if (estacion == null) return;
+            if (RondaIndex < 0 || RondaIndex >= config.estaciones.Count) { Debug.LogWarning("[GameManager] RondaIndex fuera de rango"); return; }
+            if (config.estaciones[RondaIndex] != estacion) { Debug.LogWarning($"[GameManager] estacion {estacion.id} no es la ronda actual ({config.estaciones[RondaIndex].id})"); return; }
             IrA(AppState.Situation);
         }
 
+        /// <summary>Llamado por DecisionScreen cuando el usuario toca una opción.</summary>
         public void SeleccionarOpcion(OpcionData opcion)
         {
             OpcionActual = opcion;
             nivelesElegidos.Add(opcion.nivelColaboracion);
-            if (EstacionActual != null) visitadas.Add(EstacionActual.id);
             IrA(AppState.Feedback);
+        }
+
+        /// <summary>Llamado por el botón "Continuar" del Panel_Feedback.</summary>
+        public void Continuar()
+        {
+            // marca el hotspot actual como Visitado
+            var actual = HotspotDeRonda(RondaIndex);
+            actual?.SetEstado(Hotspot3D.Estado.Visitado);
+
+            // pull-out a vista general
+            if (config != null) cameraSequencer?.AjustarBlend(config.pullOutSeconds);
+            cameraSequencer?.IrAVistaGeneral();
+            OcultarMercaderistas();
+            ApagarObjetoContenido(EstacionActual?.id);
+            if (config != null) cameraSequencer?.AjustarBlend(config.dollyInSeconds);
+
+            RondaIndex++;
+            if (RondaIndex >= config.estaciones.Count)
+            {
+                IrA(AppState.Summary);
+            }
+            else
+            {
+                // arrancar la siguiente ronda: prender el siguiente hotspot
+                ConfigurarHotspotsParaRonda();
+                IrA(AppState.MapSelection);
+            }
+        }
+
+        public void ReiniciarExperiencia()
+        {
+            RondaIndex = -1;
+            nivelesElegidos.Clear();
+            OpcionActual = null;
+            ResetHud();
+            ResetHotspots();
+            ApagarTodosLosContenidos();
+            OcultarMercaderistas();
+            IrA(AppState.Attract);
+        }
+
+        // -------- corrutinas internas --------
+
+        private IEnumerator TransicionHaciaSituation()
+        {
+            var estacion = EstacionActual;
+            int totalRondas = config != null ? config.estaciones.Count : 0;
+            int rondaUsuario = RondaIndex + 1;
+
+            Debug.Log($"[GameManager] TransicionHaciaSituation · estacion={estacion?.id} · camaraVirtualId={estacion?.camaraVirtualId}");
+
+            // Apagar los 5 hotspots para dejar la vista limpia mientras dura la ronda
+            OcultarHotspots();
+
+            // Panel_Map visible MIENTRAS la cámara se mueve
+            if (mapScreen != null) mapScreen.MostrarTransicion(rondaUsuario, totalRondas, estacion);
+            else Debug.LogError("[GameManager] mapScreen es NULL — arrastra el Panel_Map en el Inspector");
+
+            // mover cámara
+            if (cameraSequencer != null) cameraSequencer.IrAEstacion(estacion);
+            else Debug.LogError("[GameManager] cameraSequencer es NULL — arrastra el Managers/CameraSequencer en el Inspector");
+
+            // mercaderista aparece en Idle
+            var slot = BuscarMercaderistaSlot(estacion?.id);
+            if (slot == null)
+                Debug.LogWarning($"[GameManager] No hay MercaderistaSlot para id='{estacion?.id}'. Verifica el array Mercaderistas del GameManager (tamaño={mercaderistas.Count})");
+            else
+            {
+                if (slot.mercaderista == null) Debug.LogWarning($"[GameManager] Slot id={slot.estacionId} sin MercaderistaController asignado");
+                else { slot.mercaderista.Mostrar(); Debug.Log($"[GameManager] Mercaderista de {slot.estacionId} → Mostrar()"); }
+
+                if (slot.gondolaContenido == null) Debug.LogWarning($"[GameManager] Slot id={slot.estacionId} sin GondolaContenido asignado");
+                else slot.gondolaContenido.Apagar();
+            }
+
+            // esperar dolly
+            float dolly = config != null ? config.dollyInSeconds : 1.6f;
+            yield return new WaitForSeconds(dolly);
+
+            // ocultar Panel_Map → mostrar Panel_Situación con DATO + 3 botones
+            mapScreen?.Hide();
+            situationScreen?.Mostrar(estacion);
         }
 
         private IEnumerator EjecutarFeedback()
         {
+            // 1) mercaderista ejecuta la acción (trigger "Trabajando" u otro)
             var slot = BuscarMercaderistaSlot(EstacionActual?.id);
             float dur = config != null ? config.duracionAccionMercaderista : 1.2f;
             if (slot != null && slot.mercaderista != null && OpcionActual != null)
                 yield return slot.mercaderista.EjecutarAccion(OpcionActual.animacionMercaderista, dur);
 
-            if (slot != null && slot.gondolaState != null && OpcionActual != null)
-            {
-                if (OpcionActual.esAcertada) slot.gondolaState.MostrarAtendido();
-                else                          slot.gondolaState.MostrarSinAtender();
-            }
+            // 2) "objeto contenido" SIEMPRE se enciende (sin importar la opción elegida)
+            slot?.gondolaContenido?.Encender();
 
+            // 3) HUD se anima con los deltas de la opción
             Hud.AplicarOpcion(OpcionActual);
             RefrescarHud();
 
+            // 4) Panel_Feedback con todo el detalle
             feedbackScreen?.Mostrar(EstacionActual, OpcionActual);
         }
 
-        public void VolverAlMapa()
+        // -------- hotspots --------
+
+        private void ConfigurarHotspotsParaRonda()
         {
-            // paso 05: pull-out (blend más corto que el dolly de entrada)
-            if (config != null) cameraSequencer?.AjustarBlend(config.pullOutSeconds);
-            ResetGondolaActual();
-            if (config != null && visitadas.Count >= config.estaciones.Count)
-                IrA(AppState.Summary);
-            else
-                IrA(AppState.MapSelection);
-            if (config != null) cameraSequencer?.AjustarBlend(config.dollyInSeconds);
+            EstacionData esp = (RondaIndex >= 0 && RondaIndex < config.estaciones.Count)
+                ? config.estaciones[RondaIndex] : null;
+            Debug.Log($"[GameManager] ConfigurarHotspotsParaRonda · ronda={RondaIndex} · hotspots.Count={hotspots.Count} · estacionEsperada={esp?.id ?? "null"}");
+            if (esp == null) return;
+
+            foreach (var h in hotspots)
+            {
+                if (h == null) { Debug.LogWarning("[GameManager] hotspot null en la lista"); continue; }
+                if (h.estacion == null) { Debug.LogWarning($"[GameManager] {h.name} sin EstacionData asignado"); continue; }
+                h.Show();  // asegurarse que el GameObject esté activo antes de cambiar estado
+                if (h.estacion.id == esp.id) h.SetEstado(Hotspot3D.Estado.Activo);
+                else if (YaVisitada(h.estacion.id)) h.SetEstado(Hotspot3D.Estado.Visitado);
+                else h.SetEstado(Hotspot3D.Estado.Dormido);
+            }
         }
 
-        /// <summary>
-        /// "Probar otra decisión" desde Feedback: re-muestra el Panel_Situation
-        /// (mismo panel donde viven los 3 botones) pero sin re-animar el fade
-        /// de la DatoCard. La cámara se queda en la estación, sólo cambia el UI.
-        /// </summary>
-        public void ProbarOtraDecision()
+        private void ResetHotspots()
         {
-            State = AppState.Situation;
-            OcultarPantallas();
-            if (hudRoot != null) hudRoot.SetActive(true);
-            ResetGondolaActual();
-            situationScreen?.MostrarSinFade(EstacionActual);
-            RefrescarHud();
+            foreach (var h in hotspots)
+            {
+                if (h == null) continue;
+                h.Show();
+                h.SetEstado(Hotspot3D.Estado.Dormido);
+            }
         }
 
-        public void ReiniciarExperiencia()
+        /// <summary>Esconde TODOS los hotspots (GameObject.SetActive(false)). Se usa al entrar a Situation/Feedback.</summary>
+        private void OcultarHotspots()
         {
-            visitadas.Clear();
-            nivelesElegidos.Clear();
-            EstacionActual = null;
-            OpcionActual = null;
-            ResetHud();
-            OcultarMercaderistas();
-            foreach (var s in mercaderistas) s?.gondolaState?.MostrarNeutral();
-            IrA(AppState.Attract);
+            foreach (var h in hotspots) h?.Hide();
         }
 
-        // -------- helpers --------
+        private bool YaVisitada(string id)
+        {
+            for (int i = 0; i < RondaIndex; i++)
+                if (i >= 0 && i < config.estaciones.Count && config.estaciones[i].id == id)
+                    return true;
+            return false;
+        }
+
+        private Hotspot3D HotspotDeRonda(int rondaIdx)
+        {
+            if (rondaIdx < 0 || rondaIdx >= config.estaciones.Count) return null;
+            var id = config.estaciones[rondaIdx].id;
+            return hotspots.Find(h => h != null && h.estacion != null && h.estacion.id == id);
+        }
+
+        // -------- mercaderistas / contenido --------
+
+        private MercaderistaSlot BuscarMercaderistaSlot(string id) =>
+            string.IsNullOrEmpty(id) ? null : mercaderistas.Find(m => m != null && m.estacionId == id);
+
+        private void OcultarMercaderistas()
+        {
+            foreach (var s in mercaderistas) s?.mercaderista?.Ocultar();
+        }
+
+        private void ApagarObjetoContenido(string id)
+        {
+            var slot = BuscarMercaderistaSlot(id);
+            slot?.gondolaContenido?.Apagar();
+        }
+
+        private void ApagarTodosLosContenidos()
+        {
+            foreach (var s in mercaderistas) s?.gondolaContenido?.Apagar();
+        }
+
+        // -------- HUD --------
+
+        private readonly List<int> nivelesElegidos = new List<int>();
 
         private void ResetHud()
         {
@@ -205,6 +341,8 @@ namespace LOGYCA.OSA.Core
 
         private void RefrescarHud() => hudBar?.Renderizar(Hud);
 
+        // -------- pantallas --------
+
         private void OcultarPantallas()
         {
             attractScreen?.Hide();
@@ -212,29 +350,6 @@ namespace LOGYCA.OSA.Core
             situationScreen?.Hide();
             feedbackScreen?.Hide();
             summaryScreen?.Hide();
-        }
-
-        private MercaderistaSlot BuscarMercaderistaSlot(string id) =>
-            string.IsNullOrEmpty(id) ? null : mercaderistas.Find(m => m != null && m.estacionId == id);
-
-        private void MostrarMercaderista(string id)
-        {
-            OcultarMercaderistas();
-            var slot = BuscarMercaderistaSlot(id);
-            if (slot == null) return;
-            slot.mercaderista?.Mostrar();
-            slot.gondolaState?.MostrarNeutral();
-        }
-
-        private void OcultarMercaderistas()
-        {
-            foreach (var s in mercaderistas) s?.mercaderista?.Ocultar();
-        }
-
-        private void ResetGondolaActual()
-        {
-            var slot = BuscarMercaderistaSlot(EstacionActual?.id);
-            slot?.gondolaState?.MostrarNeutral();
         }
     }
 }

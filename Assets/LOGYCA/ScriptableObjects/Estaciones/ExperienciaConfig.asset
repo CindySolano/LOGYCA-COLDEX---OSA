@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ExperienciaConfig
   m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.ExperienciaConfig
   estaciones:
-  - {fileID: 11400000, guid: e65a935e839f34948a0ddddf54feeba0, type: 2}
   - {fileID: 11400000, guid: 44e7e485b676f364cb7f442bd188fae0, type: 2}
+  - {fileID: 11400000, guid: e65a935e839f34948a0ddddf54feeba0, type: 2}
   - {fileID: 11400000, guid: 14a9bd0bfc9f02a4dba35572f19a3243, type: 2}
   - {fileID: 11400000, guid: 130058f89f4d7a84283471febf93d8bc, type: 2}
   - {fileID: 11400000, guid: 89c19e2ed6230534384b44d91853d89d, type: 2}

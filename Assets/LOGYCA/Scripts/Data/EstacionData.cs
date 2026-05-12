@@ -7,9 +7,10 @@ namespace LOGYCA.OSA.Data
     public class EstacionData : ScriptableObject
     {
         [Header("Identificación")]
-        public string id;
-        public string nombre;             // "Frutería"
-        public string subtitulo;          // "Rotación y mermas"
+        public string id;                   // "fruteria"
+        public string nombre;               // "Frutería"
+        public string nombreLargo;          // "Frutería" o "Sección de frutería" — usado en Panel_Map: "Acercando cámara al hotspot {nombreLargo}"
+        public string subtitulo;            // "Rotación y mermas"
         public Sprite icono;
         public Color colorPrincipal = Color.white;
 

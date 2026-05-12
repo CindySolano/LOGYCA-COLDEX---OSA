@@ -8,11 +8,9 @@ using LOGYCA.OSA.Utils;
 namespace LOGYCA.OSA.UI.Screens
 {
     /// <summary>
-    /// Pasos 02 + 03 del slide 4 fusionados. Mientras la cámara hace dolly suave,
-    /// mostramos el label "MERCADERISTA EN HOTSPOT". Al terminar el dolly,
-    /// fade-in de la DatoCard + DecisionScreen (3 botones).
-    ///
-    /// Para el camino "Probar otra decisión" desde Feedback, usar MostrarSinFade().
+    /// Aparece DESPUÉS de que la cámara llegó al hotspot (el GameManager
+    /// ya esperó el dolly). Hace fade-in de la DatoCard y prende la
+    /// DecisionScreen inline con los 3 botones.
     /// </summary>
     public class SituationScreen : ScreenController
     {
@@ -25,39 +23,21 @@ namespace LOGYCA.OSA.UI.Screens
         {
             Show();
             if (estacion == null) return;
-            Configurar(estacion);
+
+            labelMercaderista?.Configurar(HotspotLabel.Tipo.Mercaderista, "MERCADERISTA EN HOTSPOT");
+            datoCard?.Configurar(estacion);
 
             if (datoCardGroup != null) datoCardGroup.alpha = 0f;
             decisionScreenInline?.Ocultar();
 
             StopAllCoroutines();
-            StartCoroutine(SecuenciaDollyYFade(estacion));
+            StartCoroutine(FadeYBotones(estacion));
         }
 
-        public void MostrarSinFade(EstacionData estacion)
+        private IEnumerator FadeYBotones(EstacionData estacion)
         {
-            Show();
-            if (estacion == null) return;
-            Configurar(estacion);
-
-            if (datoCardGroup != null) { datoCardGroup.alpha = 1f; datoCardGroup.interactable = true; datoCardGroup.blocksRaycasts = true; }
-            decisionScreenInline?.Mostrar(estacion);
-        }
-
-        private void Configurar(EstacionData estacion)
-        {
-            labelMercaderista?.Configurar(HotspotLabel.Tipo.Mercaderista, "MERCADERISTA EN HOTSPOT");
-            datoCard?.Configurar(estacion);
-        }
-
-        private IEnumerator SecuenciaDollyYFade(EstacionData estacion)
-        {
-            float dolly = GameManager.Instance?.Config?.dollyInSeconds ?? 1.6f;
-            float fade  = GameManager.Instance?.Config?.fadeInSeconds  ?? 0.25f;
-
-            yield return new WaitForSeconds(dolly);
+            float fade = GameManager.Instance?.Config?.fadeInSeconds ?? 0.25f;
             yield return FadeAnimator.FadeIn(datoCardGroup, fade);
-
             decisionScreenInline?.Mostrar(estacion);
         }
     }

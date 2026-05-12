@@ -21,7 +21,7 @@ namespace LOGYCA.OSA.UI.Screens
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            GameManager.Instance?.IrA(AppState.MapSelection);
+            GameManager.Instance?.EmpezarExperiencia();
         }
     }
 }

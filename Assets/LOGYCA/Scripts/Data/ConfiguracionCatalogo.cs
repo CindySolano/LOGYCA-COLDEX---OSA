@@ -1,69 +1,93 @@
 namespace LOGYCA.OSA.Data
 {
     /// <summary>
-    /// Helpers de presentación. El modelo simplificado del HUD elimina los 9
-    /// KPIs originales; aquí quedan solo helpers de colaboración (resumen) y
-    /// formato de deltas.
+    /// Helpers de presentación: nombre legible de KPI, categoría, regla de
+    /// interpretación (sube = bueno/malo), niveles de colaboración, etc.
     /// </summary>
     public static class ConfiguracionCatalogo
     {
-        public static (string nombre, string descripcion) NivelColaboracion(int nivel)
+        // --------- KPI ---------
+
+        public static bool EsFavorableSubir(TipoKPI tipo) => tipo switch
         {
-            switch (nivel)
-            {
-                case 1: return ("Cada quien por su lado",  "Decides solo, el proveedor solo recibe el pedido");
-                case 2: return ("Coordinación básica",     "Negocian un cambio puntual, pero cada uno sigue por su cuenta");
-                case 3: return ("Datos compartidos",       "Le abres tus números al proveedor para que decida mejor");
-                case 4: return ("Gestión conjunta",        "Comparten datos, decisiones, riesgos y beneficios");
-                default: return ("", "");
-            }
+            TipoKPI.DisponibilidadGondola or
+            TipoKPI.EspacioGondola or
+            TipoKPI.Ventas or
+            TipoKPI.MargenGanancia or
+            TipoKPI.SatisfaccionShopper => true,
+            _ => false
+        };
+
+        public static string NombreLegible(TipoKPI tipo) => tipo switch
+        {
+            TipoKPI.DisponibilidadGondola => "Disponibilidad en góndola",
+            TipoKPI.DiasInventario        => "Días de inventario",
+            TipoKPI.EspacioGondola        => "Espacio en góndola",
+            TipoKPI.TiempoEntrega         => "Tiempo de entrega",
+            TipoKPI.CostoTransporte       => "Costo de transporte",
+            TipoKPI.CostoOperativo        => "Costo operativo",
+            TipoKPI.Ventas                => "Ventas",
+            TipoKPI.MargenGanancia        => "Margen de ganancia",
+            TipoKPI.SatisfaccionShopper   => "Satisfacción del shopper",
+            _ => tipo.ToString()
+        };
+
+        public static CategoriaKPI Categoria(TipoKPI tipo)
+        {
+            if (tipo == TipoKPI.Ventas || tipo == TipoKPI.MargenGanancia) return CategoriaKPI.Bolsillo;
+            if (tipo == TipoKPI.SatisfaccionShopper) return CategoriaKPI.Cliente;
+            return CategoriaKPI.Operativo;
         }
 
-        public static string PerfilDecisor(float promedioColaboracion)
+        // --------- Colaboración ---------
+
+        public static (string nombre, string descripcion) NivelColaboracion(int nivel) => nivel switch
         {
-            if (promedioColaboracion <= 1.5f) return "Lobo solitario";
-            if (promedioColaboracion <= 2.5f) return "Operador clásico";
-            if (promedioColaboracion <= 3.4f) return "Colaborador";
+            1 => ("Cada quien por su lado", "Decides solo, el proveedor solo recibe el pedido"),
+            2 => ("Coordinación básica",    "Negocian un cambio puntual, pero cada uno sigue por su cuenta"),
+            3 => ("Datos compartidos",      "Le abres tus números al proveedor para que decida mejor"),
+            4 => ("Gestión conjunta",       "Comparten datos, decisiones, riesgos y beneficios"),
+            _ => ("", "")
+        };
+
+        public static string PerfilDecisor(float promedio)
+        {
+            if (promedio <= 1.5f) return "Lobo solitario";
+            if (promedio <= 2.5f) return "Operador clásico";
+            if (promedio <= 3.4f) return "Colaborador";
             return "Jugador en equipo";
         }
+
+        // --------- HUD ---------
+
+        public static string NombreIndicador(IndicadorHud i) => i switch
+        {
+            IndicadorHud.OSA => "OSA",
+            IndicadorHud.INV => "INV",
+            IndicadorHud.SOS => "SOS",
+            _ => i.ToString()
+        };
+
+        public static string NombreLargoIndicador(IndicadorHud i) => i switch
+        {
+            IndicadorHud.OSA => "On Shelf Availability",
+            IndicadorHud.INV => "Inventarios",
+            IndicadorHud.SOS => "Share of Shelf",
+            _ => i.ToString()
+        };
+
+        public static string FlechaDelta(DeltaDir dir) => dir switch
+        {
+            DeltaDir.Sube => "▲",
+            DeltaDir.Baja => "▼",
+            _ => "→"
+        };
 
         public static string FormatoDeltaPct(int delta)
         {
             if (delta > 0) return $"+{delta}%";
             if (delta < 0) return $"{delta}%";
             return "→ 0";
-        }
-
-        public static string FlechaDelta(DeltaDir dir)
-        {
-            switch (dir)
-            {
-                case DeltaDir.Sube: return "▲";
-                case DeltaDir.Baja: return "▼";
-                default:            return "→";
-            }
-        }
-
-        public static string NombreIndicador(IndicadorHud i)
-        {
-            switch (i)
-            {
-                case IndicadorHud.OSA: return "OSA";
-                case IndicadorHud.INV: return "INV";
-                case IndicadorHud.SOS: return "SOS";
-                default: return i.ToString();
-            }
-        }
-
-        public static string NombreLargoIndicador(IndicadorHud i)
-        {
-            switch (i)
-            {
-                case IndicadorHud.OSA: return "On Shelf Availability";
-                case IndicadorHud.INV: return "Inventarios";
-                case IndicadorHud.SOS: return "Share of Shelf";
-                default: return i.ToString();
-            }
         }
     }
 }

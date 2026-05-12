@@ -14,39 +14,106 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LOGYCA.OSA.Data.EstacionData
   id: carnes
   nombre: "Carnes y l\xE1cteos"
+  nombreLargo: "Carnicer\xEDa"
   subtitulo: "Cadena de fr\xEDo"
   icono: {fileID: 0}
   colorPrincipal: {r: 0.768, g: 0.282, b: 0.282, a: 1}
   camaraVirtualId: carnes
-  contexto: "Esta semana se da\xF1\xF3 el 9% de las carnes empacadas. Y al mismo
-    tiempo se acab\xF3 la leche entera 3 d\xEDas seguidos. El proveedor entrega 2
-    veces por semana."
+  contexto: "Esta semana se da\xF1\xF3 el 9% de las carnes empacadas porque se vencieron
+    antes de venderse. Y al mismo tiempo, hubo 3 d\xEDas en los que se acab\xF3 la
+    leche entera de 1 litro y los clientes no la encontraron. El proveedor entrega
+    2 veces por semana."
   pregunta: "\xBFQu\xE9 deber\xEDas hacer primero?"
   opciones:
   - letra: 65
     titulo: Pedirle al proveedor que entregue 3 veces por semana
     esAcertada: 0
     deltaOsaPct: 4
-    deltaInvDescriptivo: "\u22122u"
+    deltaInvDescriptivo: -2u
     deltaInvDir: 1
     deltaSosPct: 1
-    labelEstadoZona: "FR\xCDO REFORZADO \xB7 COSTO ALTO"
-    animacionMercaderista: Reorden
-    porque: "Vendiste un poco m\xE1s por menos quiebres, pero el cami\xF3n extra
-      se comi\xF3 casi toda la ganancia."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 91% a 95%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 7 a 5 d\xEDas"
+    - tipo: 2
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 3
+      direccion: 1
+      valorDescriptivo: "Baja de 4 a 3 d\xEDas"
+    - tipo: 4
+      direccion: 0
+      valorDescriptivo: +30%
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +5% (menos quiebres)
+    - tipo: 7
+      direccion: 2
+      valorDescriptivo: Casi igual (lo que ganas se va en transporte)
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 2
+    feedbackCadena: "Vendiste un poco m\xE1s por menos quiebres, pero el cami\xF3n
+      extra se comi\xF3 casi toda la ganancia. Resolviste hoy, pero a un costo alto."
+    feedbackProveedor: "Est\xE1 poniendo m\xE1s camiones y planeando m\xE1s despachos
+      sin recibir nada extra a cambio. La carga operativa subi\xF3, su margen tambi\xE9n
+      se apret\xF3."
+    veredicto: "La cadena gana poquito, el proveedor pierde. Esto no es sostenible:
+      tarde o temprano \xE9l te subir\xE1 el precio o pedir\xE1 renegociar."
+    animacionMercaderista: Reorden
   - letra: 66
-    titulo: "Trabajar en equipo con el proveedor: comparten datos y producci\xF3n"
+    titulo: "Trabajar en equipo con el proveedor: comparten datos, inventario y producci\xF3n"
     esAcertada: 1
     deltaOsaPct: 6
-    deltaInvDescriptivo: "\u22123u"
+    deltaInvDescriptivo: -3u
     deltaInvDir: 1
     deltaSosPct: 3
-    labelEstadoZona: "FR\xCDO COLABORATIVO"
-    animacionMercaderista: Colaborar
-    porque: "Vendiste m\xE1s, gastaste menos en log\xEDstica y casi no se da\xF1\xF3
-      producto. La gesti\xF3n conjunta paga la inversi\xF3n."
+    kpis:
+    - tipo: 0
+      direccion: 0
+      valorDescriptivo: Sube de 91% a 97%
+    - tipo: 1
+      direccion: 1
+      valorDescriptivo: "Baja de 7 a 5 d\xEDas"
+    - tipo: 2
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 3
+      direccion: 1
+      valorDescriptivo: "Baja de 4 a 2 d\xEDas"
+    - tipo: 4
+      direccion: 0
+      valorDescriptivo: +12%
+    - tipo: 5
+      direccion: 0
+      valorDescriptivo: +3% (reuniones y software compartido)
+    - tipo: 6
+      direccion: 0
+      valorDescriptivo: +8% (mejor surtido y menos merma)
+    - tipo: 7
+      direccion: 0
+      valorDescriptivo: +10%
+    - tipo: 8
+      direccion: 0
+      valorDescriptivo: Sube
     nivelColaboracion: 4
+    feedbackCadena: "Vendiste m\xE1s, gastaste menos en log\xEDstica, casi no se
+      da\xF1\xF3 producto y el cliente siempre encuentra lo que busca. Hay que abrir
+      informaci\xF3n y dedicar tiempo, pero el resultado lo justifica."
+    feedbackProveedor: "Planea su producci\xF3n con datos reales y participa en las
+      decisiones de pedido. Despacha lo justo, hace menos viajes en vac\xEDo, reduce
+      devoluciones por vencimiento."
+    veredicto: "Ganan los dos. Cuando ambos comparten informaci\xF3n Y deciden juntos,
+      el sistema completo se vuelve m\xE1s eficiente y la torta crece para ambos."
+    animacionMercaderista: Colaborar
   - letra: 67
     titulo: "Seguir igual y rebajar las carnes pr\xF3ximas a vencerse"
     esAcertada: 0
@@ -54,8 +121,39 @@ MonoBehaviour:
     deltaInvDescriptivo: "\u2192 0"
     deltaInvDir: 2
     deltaSosPct: -1
-    labelEstadoZona: "FR\xCDO EN LIQUIDACI\xD3N"
-    animacionMercaderista: Rebajar
-    porque: "Tapaste el hueco de hoy, pero rebajar precios te baj\xF3 la ganancia
-      y la pr\xF3xima semana vuelve a pasar."
+    kpis:
+    - tipo: 0
+      direccion: 1
+      valorDescriptivo: Baja de 91% a 89%
+    - tipo: 1
+      direccion: 2
+      valorDescriptivo: "Igual, 7 d\xEDas"
+    - tipo: 2
+      direccion: 1
+      valorDescriptivo: -1 cara
+    - tipo: 3
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 4
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 5
+      direccion: 2
+      valorDescriptivo: Igual
+    - tipo: 6
+      direccion: 2
+      valorDescriptivo: Casi igual
+    - tipo: 7
+      direccion: 1
+      valorDescriptivo: -6% (descuentos comen la ganancia)
+    - tipo: 8
+      direccion: 2
+      valorDescriptivo: Igual
     nivelColaboracion: 1
+    feedbackCadena: "Tapaste el hueco de hoy, pero rebajar precios te baj\xF3 la
+      ganancia y la pr\xF3xima semana vuelve a pasar."
+    feedbackProveedor: "No se enter\xF3 de la merma ni del problema. Va a seguir
+      despachando igual."
+    veredicto: "Pierden los dos, solo que el proveedor todav\xEDa no lo sabe. El
+      problema estructural sigue intacto."
+    animacionMercaderista: Rebajar
