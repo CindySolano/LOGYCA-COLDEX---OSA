@@ -70,7 +70,8 @@ MonoBehaviour:
       tarde o temprano \xE9l te subir\xE1 el precio o pedir\xE1 renegociar."
     animacionMercaderista: Reorden
   - letra: 66
-    titulo: "Trabajar en equipo con el proveedor: comparten datos, inventario y producci\xF3n"
+    titulo: "Trabajar colaborativamente con el proveedor: comparten datos, inventario
+      y producci\xF3n"
     esAcertada: 1
     deltaOsaPct: 6
     deltaInvDescriptivo: -3u

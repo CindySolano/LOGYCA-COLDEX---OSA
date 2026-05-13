@@ -28,8 +28,8 @@ namespace LOGYCA.OSA.UI.Screens
                 foreach (var n in niveles) promedio += n;
                 promedio /= niveles.Count;
 
-                if (textoPerfil   != null) textoPerfil.text   = ConfiguracionCatalogo.PerfilDecisor(promedio).ToUpper();
-                if (textoPromedio != null) textoPromedio.text = $"Promedio nivel de colaboración: {promedio:F1}";
+                if (textoPerfil != null) textoPerfil.text = ConfiguracionCatalogo.PerfilDecisor(promedio).ToUpper();
+                if (textoPromedio != null) textoPromedio.text = $"Promedio nivel de colaboración: {promedio:F1} / 4";
             }
 
             if (textoReflexion != null)
